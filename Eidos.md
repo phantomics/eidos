@@ -49,7 +49,7 @@ from a mature source and keeps the pieces that fit:
   controlled `status` vocabulary (§6) follow this tradition.
 - **ISO/IEC/IEEE 42010** (Architecture Description). The model of an
   architecture description as stakeholders, concerns, viewpoints, views,
-  and decisions with rationale. This shapes the `Arch` genre (§12).
+  and decisions with rationale. This shapes the `Arch` genre (§14).
 - **declt** and **mgl-pax** (Common Lisp). Reference documentation
   generated from source, so that `Ref` and `Spec` documents describing
   live code need not drift from it.
@@ -79,17 +79,19 @@ artifact) rather than to absorb the concern into Eidos.
 - **End-user and product documentation** — installation guides, user
   tutorials, help centers. Eidos's `Ref`/`Guide` serve *developer-facing*
   reference and walkthroughs, not polished end-user manuals. Cede this to
-  **Diátaxis** and **DITA**.
+  **Diátaxis** and **DITA** — though §21 shows how an end-user set may be
+  *derived* from project docs.
 - **Regulatory and compliance controlled-document regimes** — ISO 9001,
   IEC 62304, DO-178C, FDA 21 CFR Part 11, SOC 2. Eidos is not a compliance
   system of record and provides none of the signature, effective-date, or
   audit-trail machinery those regimes require.
-- **Localization and translation management** — locale variants, translation
-  status, translation memory. An Eidos document is single-language; L10n is
-  out of scope.
+- **Localization and translation management** — as a *core* concern. An
+  Eidos document has a single authoritative source language; translation is
+  handled as an opt-in extension (§19), not by the core.
 - **Single-sourcing and content reuse** — DITA-style `conref`/`keyref`
   transclusion. Eidos documents are whole files with no include mechanism;
-  shared content is not factored out.
+  the audience projection of §21 provides a limited cross-audience reuse
+  instead.
 - **Auto-generated API reference at scale** — OpenAPI/Swagger, Javadoc,
   Doxygen, and the HTML output of declt/mgl-pax. These are treated as
   *inputs or derived artifacts* that a `Ref` links to or is generated
@@ -113,8 +115,8 @@ Finally, a note on honesty about value. In its **near term** Eidos delivers
 *disciplined, federated, semantically-typed Markdown* — a real but modest
 benefit over ad-hoc prefixes. Its distinctive payoffs — wiki, triplestore,
 faceted search, semantic linking — are **aspirational**, gated on tooling
-and platform work described in §14, and should be evaluated as a roadmap,
-not a present capability.
+and platform work described in §16 (and the validation toolchain of §22),
+and should be evaluated as a roadmap, not a present capability.
 
 
 ## 3. The Two-Axis Model and Binding Independence
@@ -141,13 +143,13 @@ be *serialized* in more than one way — each serialization is a **binding**.
 - The **reference binding** is Markdown with a YAML front-matter block,
   tracked in a Git repository. It is the binding this document specifies in
   full, and the one all authoring uses today.
-- Alternative bindings may exist. In particular, §14 sanctions a future
+- Alternative bindings may exist. In particular, §16 sanctions a future
   **Classic-native binding**, in which documents live as first-class
   semantic entities in a Classic publishing store rather than as files.
 
 The information model is primary; a binding is a way of writing it down.
-Sections 3–10 describe the information model and its expression in the
-reference binding; §§11–13 cover governance, templates, and rationale.
+Sections 3–12 describe the information model and its expression in the
+reference binding; §§13–15 cover governance, templates, and rationale.
 
 
 ## 4. Genre Vocabulary
@@ -165,7 +167,7 @@ mnemonic in indexes and tooling facets — not in the permanent identifier
 | Plan | `Plan.` | PL | Forward design plus roadmap for a buildable unit |
 | Log | `Log.` | LG | Engineering journal of work done and verified |
 | Ref | `Ref.` | RF | Reference manual for running software |
-| Guide | `Guide.` | GD | Task walkthrough or demonstration |
+| Guide | `Guide.` | GD | Task walkthrough or demonstration; `subtype: tutorial \| howto` |
 | Spec | `Spec.` | SP | Normative contract for running software |
 | Glossary | `Glossary.` | GL | Canonical terms and backronym registry |
 | Ideation | `Ideation.` | ID | Curated foundational seed discussion (rare) |
@@ -173,6 +175,13 @@ mnemonic in indexes and tooling facets — not in the permanent identifier
 `Log` and `Plan` were historically `DevLog` and `DevPlan`; the shorter forms
 are canonical because the expanded forms were four letters where every other
 prefix reduces cleanly to two.
+
+`Guide` carries a `subtype` distinguishing the two Diátaxis task genres:
+`tutorial` (learning-oriented — a guided walkthrough for a newcomer) and
+`howto` (task-oriented — steps to accomplish a specific goal for someone who
+already knows the domain). This split is *cross-audience*: it applies to
+developer-facing guides as much as to end-user ones, and it pre-shapes the
+Diátaxis quadrants that the end-user derivation of §21 targets.
 
 The `Ideation` genre is deliberately narrow. It is for the *exceptional* seed
 discussion whose high-level framing is worth preserving as part of the record
@@ -208,7 +217,10 @@ For a single unit of work, genres typically progress:
 `Ref` / `Guide` / `Spec` (how it works now).
 
 Not every unit visits every rung; a small bug fix may produce only a `Log`,
-and a stable subsystem only a `Ref`.
+and a stable subsystem only a `Ref`. Because the permanent identifier does
+not encode genre (§5), a document may change genre as it matures — a
+`Concept` promoted to a `Plan` — without breaking its identity or any
+inbound reference.
 
 
 ## 5. Identity, Scope, and Numbering
@@ -239,7 +251,7 @@ Every document carries a permanent identifier of the form:
   the document: `CLASSIC`, `ORIGIN`, `LEXTER`, `LEXIS` for projects,
   `PSYCHE` for a program, `EIDOS` for this standard.
 - **`<NNNN>`** is a zero-padded serial number, allocated once within the
-  namespace and never reused (§11).
+  namespace and never reused (§13).
 
 Examples: `PSYCHE-0001`, `ORIGIN-0012`, `LEXTER-0007`, `CLASSIC-0003`.
 
@@ -252,11 +264,11 @@ reclassification, so the mutable facets live only in front-matter (§7) and,
 for genre, in the filename prefix (§10). The namespace, by contrast, is an
 *identity* fact — who mints and owns the document — not a content
 classification; the rare case of a document genuinely changing owners is
-handled by re-minting with a redirect (§11).
+handled by re-minting with a redirect (§13).
 
 The identifier is the anchor for all cross-references (§9) and is identical
 to the document's Classic URI (§7), so a document's identity is stable across
-bindings and across a migration between source-of-truth tiers (§14).
+bindings and across a migration between source-of-truth tiers (§16).
 
 
 ## 6. Controlled Status and Editorial Review
@@ -329,7 +341,7 @@ documents, between "implemented and verifiable here" and
 Every document in the reference binding opens with a YAML front-matter
 block. Each field maps to a `classic-class` slot and an RDF predicate, and
 to the `:classic:*` attribute it compiles to on the Lexis `document` node
-(§14); these mappings are what make an eventual semantic-store binding
+(§16); these mappings are what make an eventual semantic-store binding
 lossless.
 
 ```yaml
@@ -337,11 +349,12 @@ lossless.
 id:            PSYCHE-0001            # → classic:uri; the permanent identifier (§5)
 title:         The Psyche Architecture # → rdfs:label / dc:title
 genre:         Architecture            # → classic:type / rdf:type (§4)
-subtype:       ~                       # Eval only: prior-art | comparison | tradeoff
+subtype:       ~                       # Eval: prior-art|comparison|tradeoff; Guide: tutorial|howto
 scope:         program                 # → federation altitude (§5)
 program:       Psyche                  # → sioc:Space  (program-scope docs)
 project:       ~                       # → sioc:Space  (project/component docs)
 component:     ~                       # → dc:subject / SKOS concept (source of truth for grouping)
+language:      en                      # → dc:language (BCP-47; §12)
 status:        Design-Record           # → classic:workflow-state (§6)
 api-version:   ~                       # Ref/Guide only
 schema-version: ~                      # Spec only
@@ -374,9 +387,9 @@ glossary:      Glossary.PsycheTerms    # → term definitions consulted
 ```
 
 Fields that do not apply to a genre are omitted (shown as `~` above for
-illustration only). `id`, `title`, `genre`, `scope`, `status`, `created`,
-and `authors` are required on every document; the rest are optional and
-genre-dependent.
+illustration only). `id`, `title`, `genre`, `scope`, `language`, `status`,
+`created`, and `authors` are required on every document; the rest are
+optional and genre-dependent.
 
 
 ## 8. Cross-Cutting Registers
@@ -516,11 +529,60 @@ eidos/                        # this standard + templates + master INDEX
 ```
 
 Each repository keeps a local registry / index of its allocated identifiers
-(§11); the `eidos/INDEX.md` federates these into one catalogue — the analogue
+(§13); the `eidos/INDEX.md` federates these into one catalogue — the analogue
 of a PEP-0 index, a DITA map, and a Classic federation space.
 
 
-## 11. Governance, Change Process, and ID Allocation
+## 11. Diagrams and Media
+
+*This section is intentionally a **stub**. It reserves a permanent home for
+diagram and media conventions so that later detail can be filled in by
+amendment (§13) without renumbering the document.*
+
+The normative kernel that holds today:
+
+- **Diagrams as code.** A diagram SHOULD be authored as text-based source
+  (Mermaid, PlantUML, Graphviz DOT, or a Lexis figure) committed to the
+  repository, so it diffs, reviews, and renders across targets. A rendered
+  raster or vector image is a **derived artifact** (§16), never the source of
+  truth.
+- **Media assets.** Binary media (screenshots, photographs) are stored as
+  referenced files with stable paths; they are referenced, not treated as
+  the source of truth for any textual content.
+- **Text equivalents.** Every diagram MUST carry a text-equivalent long
+  description, per the accessibility rules of §12.
+
+Deferred to a later amendment: preferred diagram languages and their
+precedence, the asset-directory layout, figure numbering and caption format,
+and the handling of large or interactive media.
+
+
+## 12. Accessibility
+
+Accessibility divides into rules an author can satisfy at write time — which
+are **normative now** — and rules a renderer must satisfy, which are
+described as a forward-looking extension in §20. This section states the
+author-time rules. They map onto existing Lexis node slots and are checked by
+the validation toolchain (§22).
+
+An Eidos document MUST:
+
+- provide **alt text** for every image;
+- provide a **text-equivalent long description** for every diagram (§11);
+- give every table **header cells and a caption**;
+- use **heading levels that nest without skipping** (no h2 → h4 jump);
+- use **meaningful link text** — the linked `id` or a descriptive phrase,
+  never "click here" or a bare URL (this reinforces the id-keyed link rule of
+  §9);
+- declare a **`language`** (BCP-47) in front-matter (§7), and mark inline
+  spans in another language where they occur.
+
+These rules cost little at authoring time, deliver value immediately without
+waiting on tooling, and are the foundation the render-time WCAG conformance
+of §20 builds upon.
+
+
+## 13. Governance, Change Process, and ID Allocation
 
 A standard needs a way to evolve and a way to hand out identifiers without
 collision. Both are defined here.
@@ -541,7 +603,8 @@ records (§8) in the `EIDOS` namespace. A change is proposed as a `Plan` (or,
 for a single narrow decision, a `D`-record) against `EIDOS`, reviewed under
 §6, and on acceptance the version is incremented:
 
-- **patch** — clarifications and editorial fixes;
+- **patch** — clarifications and editorial fixes (including filling a stub
+  section such as §11);
 - **minor** — additive, backward-compatible changes (a new optional field, a
   new status value);
 - **major** — changes that can invalidate existing conformant documents (a
@@ -581,11 +644,17 @@ The `EIDOS` steward maintains `eidos/INDEX.md`, which federates the
 per-namespace registries into one catalogue (§10). It is generated from
 front-matter and the registries, never hand-maintained as a parallel source.
 
+### Conformance
 
-## 12. Per-Genre Templates
+Conformance is presently upheld by convention and editorial review (§6). The
+definition of a conforming document and corpus, and the automated validator
+that will enforce it in CI, are described in §22.
+
+
+## 14. Per-Genre Templates
 
 Each genre has a canonical section skeleton. Templates codify the
-resolutions in §13; authors adapt them but keep the section names and order.
+resolutions in §15; authors adapt them but keep the section names and order.
 
 ### Log
 
@@ -659,17 +728,18 @@ Derived from ISO/IEC/IEEE 42010:
 
 - **Ref** — overview abstract, then API/protocol sections (classes, slots,
   generic-function signatures), then a Project Structure section.
-- **Guide** — prerequisites, then numbered steps, then the achieved result;
-  the REPL-walkthrough style.
+- **Guide** — prerequisites, then the body. A `tutorial` runs as a guided,
+  narrated walkthrough (the REPL-walkthrough style); a `howto` is a terse,
+  numbered task procedure ending in the achieved result.
 - **Spec** — normative "Required …" sections using RFC 2119 language (MUST /
   SHOULD / MAY).
 
 
-## 13. Inconsistency-Resolution Reference
+## 15. Inconsistency-Resolution Reference
 
 This table records the concrete inconsistencies observed across the existing
 corpora (Classic, Origin, Lexter) and the resolution each receives above. It
-is the rationale companion to the rules in §§4–12.
+is the rationale companion to the rules in §§4–14.
 
 | # | Area | Observed variants | Resolution |
 |---|---|---|---|
@@ -678,20 +748,20 @@ is the rationale companion to the rules in §§4–12.
 | 3 | Foreign references | Ad-hoc inline only | `cites:` + source-map appendix (§9) |
 | 4 | Front-matter format | None / `Date` / `Date+Status` / prose bold-label lines | Uniform YAML block (§7) |
 | 5 | Status values | Free prose | Controlled vocabulary + editorial review (§6) |
-| 6 | Log trailer sections | `Tests/Files/Metrics` vs `Verification/Files/Outstanding` vs `Future work` | Fixed `Verification → Files → Outstanding Work`; Metrics optional (§12) |
+| 6 | Log trailer sections | `Tests/Files/Metrics` vs `Verification/Files/Outstanding` vs `Future work` | Fixed `Verification → Files → Outstanding Work`; Metrics optional (§14) |
 | 7 | Decision sub-format | `Question/Decision` vs Adopted/Rejected prose vs numbered vs `D`-IDs | ADR shape + namespaced `D`-IDs (§8) |
 | 8 | Open questions | "Open Questions" vs "Open Design Questions"; numbered vs bullets | `## Open Questions` + `O`-IDs (§8) |
-| 9 | `Files` table | `Repo/File/Action/Description` vs `File/Action/Description` vs bullets | Canonical table; `Repo` column only when cross-repo (§12) |
-| 10 | Title / H1 form | Varies widely by document | Per-genre title template; genre/scope from front-matter (§12) |
-| 11 | Installments / appendices | Ad-hoc dated phases; inconsistent depth | `## Update <date> — <title>`, or new linked document (§12) |
+| 9 | `Files` table | `Repo/File/Action/Description` vs `File/Action/Description` vs bullets | Canonical table; `Repo` column only when cross-repo (§14) |
+| 10 | Title / H1 form | Varies widely by document | Per-genre title template; genre/scope from front-matter (§14) |
+| 11 | Installments / appendices | Ad-hoc dated phases; inconsistent depth | `## Update <date> — <title>`, or new linked document (§14) |
 | 12 | Reference sub-roles | Unprefixed bucket mixes manual / demo / contract | Split into `Ref` / `Guide` / `Spec` (§4) |
 | 13 | Directory layout | Classic subdirs vs Origin/Lexter flat | Flat `doc/`; `component` front-matter is truth (§10) |
 | 14 | Provenance disclosure | Some state it, most silent | `provenance:` front-matter (§7) |
 | 15 | Scope declaration | Explicit in Psyche, implicit elsewhere | `scope:` axis + optional in-body Scope/Out-of-scope (§5) |
-| 16 | Metrics / test reporting | `## Metrics` counts vs prose vs omitted | Verification states run command + pass count; Metrics optional (§12) |
+| 16 | Metrics / test reporting | `## Metrics` counts vs prose vs omitted | Verification states run command + pass count; Metrics optional (§14) |
 
 
-## 14. Appendix — Derivation and Rendering Targets
+## 16. Appendix — Derivation and Rendering Targets
 
 An Eidos corpus is a **source of truth** from which every other form is
 **derived one-way**. The reference binding keeps that source in Git as
@@ -725,9 +795,10 @@ for search and SEO.
 The only new component the pipeline requires is a **Markdown→Lexis
 importer** (front-matter → `:classic:*` document attributes; CommonMark
 blocks → Lexis nodes). It keeps authoring in portable Markdown while
-unlocking the whole Lexis fan-out. Genre-specific rendering — a `Log` or
-`Arch` rendering its front-matter as a typed infobox — plugs in via Lexis's
-tag-extension mechanism and Classic's `:infobox`/`:label` lenses; the
+unlocking the whole Lexis fan-out, and it shares its Markdown+YAML parsing
+front-end with the validation toolchain (§22). Genre-specific rendering — a
+`Log` or `Arch` rendering its front-matter as a typed infobox — plugs in via
+Lexis's tag-extension mechanism and Classic's `:infobox`/`:label` lenses; the
 concrete tag and lens registry is deferred to a follow-on Plan.
 
 ### Named targets
@@ -778,7 +849,7 @@ divergence/merge hazard the one-way design exists to avoid.
   fallback.
 
 **Conformance of the textual binding.** The Markdown+YAML binding MUST
-round-trip the **core information model** — everything defined in §§3–10 —
+round-trip the **core information model** — everything defined in §§3–12 —
 **losslessly**. A Tier-2 corpus MAY carry extensions beyond what Markdown
 can express (typed relationship graphs, embedded resources, richer
 provenance); on export these MAY degrade, but the exporter MUST signal the
@@ -792,7 +863,7 @@ stable across bindings and across a tier migration, so the federated
 cross-reference graph (§9) survives promotion and export intact.
 
 
-## 15. Appendix — Classic-as-Platform Mapping
+## 17. Appendix — Classic-as-Platform Mapping
 
 For implementers targeting Classic (as a render target in Tier 1 or as the
 store in Tier 2), the Eidos information model maps onto Classic's
@@ -805,6 +876,7 @@ semantic model as follows. This table doubles as the ingestion specification.
 | `id` | `classic:uri` — the entity's canonical URI |
 | `status` | `classic-stateful` workflow state |
 | `reviewers` / `approved-by` | Editorial-workflow role relations |
+| `language` / translations | `dc:language` + locale-qualified entities (§19) |
 | Front-matter fields | `classic-class` slot annotations with `:predicate` |
 | `relates-to` / `supersedes` | Typed relationship slots (page links / `prov:wasRevisionOf`) |
 | `cites` (external) | Foreign-reference entities flagged non-corpus |
@@ -815,7 +887,168 @@ semantic model as follows. This table doubles as the ingestion specification.
 | Genre infobox rendering | `:infobox` / `:label` lens specs per `doc-<genre>` class |
 
 Under Tier 2 these mappings are the *storage* model directly; under Tier 1
-they are the *derivation* target that the pipeline (§14) produces.
+they are the *derivation* target that the pipeline (§16) produces.
+
+
+## 18. Appendix — Extension Mechanism
+
+*Non-normative; forward-looking.*
+
+The core of Eidos is deliberately small. Capabilities beyond it attach as
+**extensions**, so the core need not grow to accommodate every concern. An
+extension is defined by the same principle that governs the whole standard:
+add without disturbing what is already there.
+
+- **Attachment points.** An extension MAY add namespaced front-matter keys
+  (e.g. `l10n:`, `a11y:`, `audience:`), optional Lexis tags or attributes,
+  and named conformance profiles. It MUST NOT redefine core fields or change
+  core semantics.
+- **Graceful degradation.** A processor that does not understand an extension
+  MUST still process the core correctly by ignoring the extension — the same
+  discipline Lexis applies to unknown tags (its "never silently discard,
+  approximate or degrade" renderer principle) and that DITA applies to
+  specialization.
+- **Layering.** Extensions are opt-in per corpus and compose: a corpus may
+  enable localization (§19), accessibility profiles (§20), and audience
+  projection (§21) independently.
+
+Prior art: DITA specialization and conditional-processing (profiling); the
+RDF/OWL practice of additive vocabularies.
+
+The following appendices define three extensions in this shape.
+
+
+## 19. Appendix — Localization Extension
+
+*Non-normative; forward-looking.*
+
+Localization is modelled the way everything else in Eidos is: one
+authoritative source, everything else derived one-way.
+
+- **Source language.** Each document declares an authoritative `language`
+  (§7). There is exactly one source language per document.
+- **Translations are derived and revision-pinned.** A translation records the
+  source **revision** it was translated from (a commit SHA — the same
+  commit-pinning mechanism as §9). When the source advances past that
+  revision, the translation is automatically flagged **stale**, exactly as a
+  code reference would be.
+- **Identity.** A translation shares the source document's `id` with a locale
+  qualifier — `ORIGIN-0012@fr` — and never receives a new id, so the
+  federated cross-reference graph (§9) is unaffected and a reader may resolve
+  any locale of a referenced document.
+- **Front-matter.** A translation carries `translation-of: <id>`,
+  `source-revision: <sha>`, `locale: <BCP-47>`, and
+  `translation-status: untranslated | translated | stale | reviewed`.
+- **Interchange.** Because the body is a Lexis tree of text nodes, the
+  pipeline can emit **XLIFF** for translators and re-import their work,
+  keeping translators out of Markdown structure.
+
+Prior art: XLIFF, the DITA translation model, gettext PO, Mozilla Fluent.
+
+
+## 20. Appendix — Accessibility Extension (Render-Time and Profiles)
+
+*Non-normative; forward-looking. Complements the normative author-time rules
+of §12.*
+
+Where §12 governs what an author must put *into* a document, this extension
+governs what a renderer must produce *from* it.
+
+- **Render-time conformance.** The Lexis HTML renderer and Classic themes
+  SHOULD target **WCAG 2.x AA**: semantic HTML, ARIA roles where semantics
+  are otherwise lost, sufficient colour contrast in themes, a sensible focus
+  order, and a reading order that matches the document order.
+- **Conformance profiles.** A corpus MAY declare a target level (e.g.
+  `a11y: wcag-2.2-AA`) as a profile; the validator (§22) checks the
+  author-time rules of §12 and a conforming renderer certifies the
+  render-time half.
+- **Language and pronunciation.** The `language` tag and inline
+  language-span marks (§12) feed screen-reader pronunciation, so this
+  extension and localization (§19) reinforce each other.
+
+Prior art: WCAG 2.x, WAI-ARIA, EPUB Accessibility.
+
+
+## 21. Appendix — Audience Projection and End-User Derivation
+
+*Non-normative; forward-looking.*
+
+End-user documentation is not a genre in Eidos; it is a **derivation** of the
+project docs, produced by projecting audience-appropriate content and
+re-shaping it into the Diátaxis quadrants.
+
+- **Audience tagging.** Documents and, via Lexis attributes, individual
+  blocks carry an `audience` designator — `developer | end-user | both`.
+- **Projection.** The end-user set is produced by selecting end-user-
+  applicable content and re-sequencing it into Diátaxis quadrants
+  (Tutorial / How-to / Reference / Explanation), reusing the `Guide`
+  `tutorial|howto` subtype (§4) for the two task genres.
+- **Derivation *plus* curation — the honest part.** Projection **seeds** the
+  end-user set; it does not finish it. End-user docs need framing, tone, and
+  screenshots that development docs lack, so a technical writer curates and
+  augments the projected material. This is cross-audience *reuse*, not full
+  automation, and it is the closest Eidos comes to single-sourcing (§2).
+- **One-way.** The project docs remain the source of truth; the end-user set
+  is a derived corpus (itself potentially an Eidos corpus in a product
+  namespace, or an external Diátaxis/DITA site).
+
+Prior art: DITA `@audience` conditional processing (ditaval); Diátaxis.
+
+
+## 22. Appendix — Conformance and the Validation Toolchain
+
+*Non-normative; describes intended tooling, not yet built. Tracked as the
+`EIDOS-DRAFT-toolchain` Plan.*
+
+Until this toolchain exists, conformance is upheld by convention and
+editorial review (§6, §13); an unenforced standard drifts, so the toolchain
+is the priority follow-on.
+
+### Conformance definitions
+
+- A **conforming document** has all required front-matter fields (§7), uses
+  only controlled-vocabulary values (genre, subtype, scope, status), carries
+  a well-formed unique `id`, resolves all of its document references, pins
+  every code reference to a revision where required (§9), and satisfies the
+  author-time accessibility rules (§12).
+- A **conforming corpus** additionally has a consistent registry (§13): every
+  `id` unique within its namespace, every `relates-to` / `supersedes` /
+  inbound link resolving, and no dangling `superseded-by` redirect.
+
+### What the validator checks
+
+- **Front-matter schema** — required fields present; values well-typed.
+- **Controlled vocabularies** — `genre`, `subtype`, `scope`, `status`
+  drawn from §4/§6; `Superseded-by` names a real id.
+- **Identity and registry** — id format (§5), uniqueness, registry agreement.
+- **Reference integrity** — document links resolve to real ids; code
+  references are commit-pinned in `Log`/`Plan` (§9); foreign `cites` are
+  well-formed.
+- **Accessibility (author-time)** — the §12 MUST rules.
+
+Severity maps to CI outcome: a **MUST** violation is an error that blocks
+merge; a **SHOULD** violation is a warning. The validator complements, and
+does not replace, the human editorial review of §6.
+
+### Implementation in Common Lisp (description)
+
+The toolchain is intended to be a Common Lisp program — a fitting choice, as
+the corpus and its target platform (Classic) are Lisp, and the validator can
+share code with the Markdown→Lexis importer (§16).
+
+- A **Markdown parser** (e.g. `3bmd` or a CommonMark binding) reads the body;
+  a **YAML parser** (e.g. `cl-yaml`) reads the front-matter block. This
+  parsing front-end is the *same* one the §16 importer uses — one front-end
+  serving both validation and derivation.
+- The checks above run over the parsed front-matter and body tree, emitting a
+  report (human-readable and machine-readable) with per-finding severity.
+- As a side output the tool can regenerate each namespace's registry and the
+  federated `eidos/INDEX.md` (§13, §10) from front-matter, keeping the index
+  from being a hand-maintained parallel source.
+- It runs locally and in CI (on pull request), gating merges on errors.
+
+The concrete design and code belong in a separate effort; this appendix fixes
+only what the toolchain must guarantee and how it fits the pipeline.
 
 
 ---
