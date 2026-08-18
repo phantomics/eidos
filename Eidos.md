@@ -40,7 +40,7 @@ from a mature source and keeps the pieces that fit:
   Reference — are the direct ancestors of several Eidos genres.
 - **Diátaxis** (Procida). The four-way split of documentation into
   Explanation, Reference, Tutorial, and How-to. This informs the
-  reference-side genres (`Ref`, `Guide`) and the explanatory `Concept`.
+  reference-side genres (`Ref`, `Guide`) and the exploratory `Survey`.
 - **ADR / MADR** (Architecture Decision Records; Nygard). The discipline
   of recording a single decision as Context / Decision / Alternatives /
   Status. Eidos's decision registers (§8) are ADRs with stable IDs.
@@ -56,7 +56,7 @@ from a mature source and keeps the pieces that fit:
 
 The result is a **maturity ladder crossed with an altitude axis**: a
 document is placed both by *where it sits in a project's lifecycle*
-(Concept → Eval → Plan → Log → Reference) and by *how much it spans*
+(Survey → Eval → Plan → Log → Reference) and by *how much it spans*
 (a single component, a whole project, or a program of many projects).
 
 
@@ -161,7 +161,7 @@ mnemonic in indexes and tooling facets — not in the permanent identifier
 
 | Genre | Prefix | Code | Role |
 |---|---|---|---|
-| Concept | `Concept.` | CN | Exploratory "should we?" — aspirational, non-normative |
+| Survey | `Survey.` | SU | Exploratory "should we?" — aspirational, non-normative; surveys the territory before a Plan |
 | Eval | `Eval.` | EV | Evaluative analysis; `subtype: prior-art \| comparison \| tradeoff` |
 | Architecture | `Arch.` | AR | Comprehensive design record — aspirational and normative |
 | Plan | `Plan.` | PL | Forward design plus roadmap for a buildable unit |
@@ -198,20 +198,22 @@ is normative about it:
 
 |  | Non-normative | Normative |
 |---|---|---|
-| **Aspirational** (not yet built) | `Concept` | `Arch` |
+| **Aspirational** (not yet built) | `Survey` | `Arch` |
 | **Existing** (running code) | — | `Ref` / `Spec` |
 
-`Concept` explores whether something *should* exist; `Arch` specifies,
-comprehensively and normatively, a system that *does not yet* exist (a
-hardware architecture, a system-of-systems); `Ref` and `Spec` describe
-software that *does* exist. `Eval` sits beside `Concept` as its evidential
-companion — it evaluates prior art or peer systems to inform a design.
+`Survey` assesses whether something *should* exist by mapping the design
+territory; `Arch` specifies, comprehensively and normatively, a system that
+*does not yet* exist (a hardware architecture, a system-of-systems); `Ref`
+and `Spec` describe software that *does* exist. `Eval` sits beside `Survey`
+as its sharper evidential companion — Survey maps the territory broadly,
+while Eval systematically compares alternatives against a rubric to inform
+a design.
 
 ### The maturity ladder
 
 For a single unit of work, genres typically progress:
 
-`Concept` (should we?) → `Eval` (what does prior art teach?) →
+`Survey` (should we?) → `Eval` (what does prior art teach?) →
 `Plan` (how will we build it, with a roadmap?) →
 `Log` (what we built and verified) →
 `Ref` / `Guide` / `Spec` (how it works now).
@@ -219,7 +221,7 @@ For a single unit of work, genres typically progress:
 Not every unit visits every rung; a small bug fix may produce only a `Log`,
 and a stable subsystem only a `Ref`. Because the permanent identifier does
 not encode genre (§5), a document may change genre as it matures — a
-`Concept` promoted to a `Plan` — without breaking its identity or any
+`Survey` promoted to a `Plan` — without breaking its identity or any
 inbound reference.
 
 
@@ -258,7 +260,7 @@ Examples: `PSYCHE-0001`, `ORIGIN-0012`, `LEXTER-0007`, `CLASSIC-0003`.
 **The identifier encodes only the minting authority and a serial number — it
 deliberately does *not* encode the genre or the scope.** Genre and scope are
 *classifications* of a document's content and altitude, and both are
-mutable: a `Concept` may mature into a `Plan`, and a `component` document may
+mutable: a `Survey` may mature into a `Plan`, and a `component` document may
 be re-scoped to `project`. A permanent identifier must survive such
 reclassification, so the mutable facets live only in front-matter (§7) and,
 for genre, in the filename prefix (§10). The namespace, by contrast, is an
@@ -278,7 +280,7 @@ The `status` field replaces the free prose that the ad-hoc scheme used
 from a controlled vocabulary so that a corpus can be filtered and a
 document's lifecycle position is unambiguous.
 
-### Proposal and record genres (`Concept`, `Eval`, `Plan`, `Arch`, `Log`)
+### Proposal and record genres (`Survey`, `Eval`, `Plan`, `Arch`, `Log`)
 
 - **`Draft`** — being written; not yet complete.
 - **`Proposed`** — complete and under consideration.
@@ -389,7 +391,43 @@ glossary:      Glossary.PsycheTerms    # → term definitions consulted
 Fields that do not apply to a genre are omitted (shown as `~` above for
 illustration only). `id`, `title`, `genre`, `scope`, `language`, `status`,
 `created`, and `authors` are required on every document; the rest are
-optional and genre-dependent.
+optional and genre-dependent. Three of the required fields — `authors`,
+`created`, `updated` — MAY be omitted from the file when derivable from Git
+history, per the rules below.
+
+### Git-derived fields
+
+Author and date metadata duplicate what Git already knows. Rather than
+hand-maintain (and let drift) values that `git log` supplies authoritatively,
+Eidos permits three fields to be **derived from Git history**:
+
+- **`authors`** — from `git log --follow` over the file's history.
+- **`created`** — the first commit that added the file.
+- **`updated`** — the most recent commit touching the file.
+
+The rule is symmetric with how the rest of the standard treats source of
+truth: **absence in front-matter means derive from Git; presence means use
+the written value as an override.** An explicit value wins whenever history
+would mislead — imported files, batched commits, contributors under multiple
+identities, files predating the corpus. For consistent author identity when
+deriving, the toolchain SHOULD honour a repository's **`.mailmap`** file
+(Git's standard canonicalization mechanism).
+
+Derivation happens **at build and validation time**; the toolchain does not
+write the derived values back into source files. Files remain the single
+source of truth and stay clean; Git remains the authority for the derived
+values.
+
+The remaining front-matter fields are editorial or asserted acts that Git
+cannot supply — `reviewers`, `approved-by`, `reviewed`, `provenance`,
+`decisions`, `open-questions`, `relates-to`, `cites`, `supersedes`,
+`superseded-by`, `glossary`, and the classification fields — and remain
+hand-maintained.
+
+The effective conformance rule for the three Git-derivable fields: a
+conforming document MUST have a value known to the toolchain, either present
+in front-matter or derivable from Git; the validator (§22) errors only when
+neither is available (an untracked file, an empty history).
 
 
 ## 8. Cross-Cutting Registers
@@ -525,7 +563,7 @@ eidos/                        # this standard + templates + master INDEX
 
 <project>/  (classic/, origin/, lexter/, lexis/)
   doc/                        # project- and component-scope documents
-    Log.*.md  Plan.*.md  Concept.*.md  Ref.*.md  ...
+    Log.*.md  Plan.*.md  Survey.*.md  Ref.*.md  ...
 ```
 
 Each repository keeps a local registry / index of its allocated identifiers
@@ -688,7 +726,7 @@ documents linked via `relates-to`.
 ## Roadmap                        (ordered, indicative milestones)
 ```
 
-### Concept
+### Survey
 
 ```
 ## Motivation
@@ -759,6 +797,7 @@ is the rationale companion to the rules in §§4–14.
 | 14 | Provenance disclosure | Some state it, most silent | `provenance:` front-matter (§7) |
 | 15 | Scope declaration | Explicit in Psyche, implicit elsewhere | `scope:` axis + optional in-body Scope/Out-of-scope (§5) |
 | 16 | Metrics / test reporting | `## Metrics` counts vs prose vs omitted | Verification states run command + pass count; Metrics optional (§14) |
+| 17 | Author/date metadata | Hand-maintained; drifts from Git | MAY be Git-derived (§7, §22) |
 
 
 ## 16. Appendix — Derivation and Rendering Targets
@@ -1024,6 +1063,10 @@ is the priority follow-on.
 - **Reference integrity** — document links resolve to real ids; code
   references are commit-pinned in `Log`/`Plan` (§9); foreign `cites` are
   well-formed.
+- **Git-derived fields** — when `authors`, `created`, or `updated` are
+  omitted from front-matter, derives them from Git history (§7); errors
+  only if underivable (untracked file, empty history). An explicit value in
+  the file overrides derivation.
 - **Accessibility (author-time)** — the §12 MUST rules.
 
 Severity maps to CI outcome: a **MUST** violation is an error that blocks
@@ -1040,6 +1083,9 @@ share code with the Markdown→Lexis importer (§16).
   a **YAML parser** (e.g. `cl-yaml`) reads the front-matter block. This
   parsing front-end is the *same* one the §16 importer uses — one front-end
   serving both validation and derivation.
+- A **Git integration** shells out to `git log --follow` (respecting
+  `.mailmap`) as the source for derived `authors`/`created`/`updated` fields
+  (§7); the same integration verifies commit-pinned code references from §9.
 - The checks above run over the parsed front-matter and body tree, emitting a
   report (human-readable and machine-readable) with per-finding severity.
 - As a side output the tool can regenerate each namespace's registry and the
