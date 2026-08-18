@@ -1033,6 +1033,12 @@ re-shaping it into the Diátaxis quadrants.
 
 Prior art: DITA `@audience` conditional processing (ditaval); Diátaxis.
 
+Full scope-out of the projection rules, curation refresh semantics,
+terminology mapping, product-namespace governance, and product-release
+versioning is tracked as the follow-on Plan `EIDOS-DRAFT-user-doc-derivation`.
+This appendix remains a sketch; the Plan will carry the detail and is
+recorded in §23 as one of the standard's specified-but-deferred items.
+
 
 ## 22. Appendix — Conformance and the Validation Toolchain
 
@@ -1095,6 +1101,89 @@ share code with the Markdown→Lexis importer (§16).
 
 The concrete design and code belong in a separate effort; this appendix fixes
 only what the toolchain must guarantee and how it fits the pipeline.
+
+
+## 23. Appendix — Known Limitations and Outstanding Issues
+
+*Non-normative; a durable record of the standard's known gaps and how each
+is being addressed. Entries are never deleted; they migrate between
+categories as amendments (§13) land, so the history of what changed and why
+is legible without excavating the change log. This appendix is prospective
+(what Eidos itself still lacks); it complements §15, which is retrospective
+(what the ad-hoc corpora did and how Eidos fixes them).*
+
+### Resolved
+
+Closed items, retained as history.
+
+| # | Area | Where addressed |
+|---|---|---|
+| R1 | `Concept` genre collided with DITA/Diátaxis "concept/explanation" | Renamed to `Survey` (§4) |
+| R2 | Mandatory `file:line` code refs institutionalized rot | Commit-pinned `path[:symbol]@revision` (§9) |
+| R3 | Identifier encoded mutable classification (genre, scope) | Decoupled to `<NAMESPACE>-<NNNN>` (§5) |
+| R4 | No governance, change process, or ID allocation mechanism | §13 (stewardship, amendment process, registry-based allocation) |
+| R5 | No editorial review workflow | `In-Review` status + `reviewers`/`approved-by`/`reviewed` (§6) |
+| R6 | Scope creep / over-claiming as universal doc system | Explicit non-goals (§2) |
+| R7 | `Ideation` genre canonized raw AI transcripts | Tightened to rare curated cases (§4); routine transcripts declared disposable (§2) |
+| R8 | Tutorial vs. How-to collapsed in `Guide` | `Guide` `subtype: tutorial \| howto` (§4) |
+| R9 | Localization absent from the model | Extension appendix (§19) |
+| R10 | Accessibility unaddressed | Author-time rules normative (§12); render-time extension (§20) |
+| R11 | `authors` / `created` / `updated` duplicated Git metadata | MAY be Git-derived (§7); validator derives with `.mailmap` (§22) |
+
+### Specified, tooling deferred
+
+Described in the standard but not yet built. Each has a tracking Plan
+identifier in the `EIDOS` namespace.
+
+| # | Area | Tracked as |
+|---|---|---|
+| S1 | Validation toolchain (Common Lisp; front-end shared with the importer) | `EIDOS-DRAFT-toolchain` (§22) |
+| S2 | Markdown→Lexis importer | Part of `EIDOS-DRAFT-toolchain` (§16) |
+| S3 | Diagrams and media detailed conventions | §11 stub, to be filled by amendment |
+| S4 | Classic-native Tier-2 binding | §16; gated on Classic maturation |
+| S5 | User-doc derivation (audience projection, curation refresh, terminology mapping) | `EIDOS-DRAFT-user-doc-derivation` (§21) |
+| S6 | Genre-specific Lexis tags and Classic infobox/label lens registry | Follow-on Plan (§16) |
+
+### Partially resolved
+
+Addressed to some degree, with residue explicitly named.
+
+| # | Area | Residue |
+|---|---|---|
+| P1 | Maturity-ladder genre ambiguity | Identity is now stable across genre changes (§5), but the "which genre?" choice at authoring time can still bikeshed |
+| P2 | Provenance disclosure depth | `provenance` (§7) and `approved-by` (§6) cover the basics; model-version, prompt captures, and human-review attestation are not specified |
+| P3 | Retention and archival policy | `Deprecated` / `Superseded-by` exist (§6); no explicit pruning or cold-storage policy |
+| P4 | Genre proliferation | Managed by the §13 amendment gate and by preferring subtypes over new genres; not actively shrunk |
+
+### Open by design
+
+Accepted non-goals; recorded here so their status is not forgotten and so a
+future proposal to bring them in-scope has a clear starting point.
+
+| # | Area | Rationale |
+|---|---|---|
+| D1 | Regulatory / compliance controlled-document regimes | §2 non-goal; use domain frameworks |
+| D2 | Auto-generated API reference at scale | §2 non-goal; integration seam via `Ref` |
+| D3 | Release notes and changelogs | §2 non-goal; per-release append artifacts |
+| D4 | Runbooks, on-call, incident postmortems | §2 non-goal; distinct operational lifecycles |
+| D5 | Requirements specification and traceability matrices | §2 non-goal; `D`/`O` registers are not a requirements register |
+| D6 | Knowledge-base / support / FAQ content | §2 non-goal |
+| D7 | DITA-style single-sourcing / transclusion | §2 non-goal; §21 gives limited cross-audience reuse |
+| D8 | Three-tier scope (`component`/`project`/`program`) rigidity | Accepted simplification; larger organizations may need extension |
+
+### Genuinely open
+
+Real gaps not yet addressed. These are the candidate inputs for future
+Plans, in priority order.
+
+| # | Area | Note |
+|---|---|---|
+| O1 | Monolithic document granularity vs. modular authoring | Docs are whole files; no include mechanism; hard to reuse and hard to review in small diffs |
+| O2 | Bus factor / niche-tech adoption risk | Inherent to a bespoke standard bound to a Common Lisp platform; mitigable only by ecosystem uptake and honest disclosure |
+| O3 | End-user documentation as a first-class output | Seamed by §21 and tracked as S5, but not solved: user-doc derivation is a large body of work |
+| O4 | Reviewer capture from forge PR data | `reviewers` is currently hand-maintained; harvesting from GitHub/GitLab PR review data is a plausible extension, unspecified |
+| O5 | Multi-persona audience axis | `audience: developer \| end-user \| both` (§21) may need to become a small vocabulary (administrator, integrator, end-user) rather than three fixed values |
+| O6 | Draft-to-canonical ID assignment ergonomics | §13 specifies steward-at-merge; needs a tooling ergonomic that isn't friction at the moment of accept |
 
 
 ---
