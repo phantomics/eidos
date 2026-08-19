@@ -570,6 +570,25 @@ Each repository keeps a local registry / index of its allocated identifiers
 (§13); the `eidos/INDEX.md` federates these into one catalogue — the analogue
 of a PEP-0 index, a DITA map, and a Classic federation space.
 
+### The repository README
+
+Each repository's `README.md` is a **fixture**, not an Eidos document: it
+lives at repo root (not `doc/`), carries no front-matter, does not
+participate in the identifier or federation system, and follows ecosystem
+convention — project identity, badges, install summary, quick example, and
+links to the corpus, `LICENSE`, and `CONTRIBUTING`.
+
+Wherever a README section covers material that also exists as a typed
+document under `doc/` — an installation `Guide`, a parameter `Ref`, a
+getting-started tutorial — the README SHOULD link to that document by `id`
+rather than duplicate its content. The typed document is the source of
+truth; the README is the curated entry point. Under this discipline the
+README stays short and its Guide-flavored or Ref-flavored sections cannot
+drift from the authoritative material in `doc/`.
+
+Other repo-root fixtures (`LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`,
+`CHANGELOG.md`) are similarly outside the genre system.
+
 
 ## 11. Diagrams and Media
 
@@ -1258,11 +1277,42 @@ well-positioned to be one.
 4. **Cross-reference stability is what enables multi-audience output** —
    KEP ids, `rustdoc` anchors, Stripe operation ids all play the role of
    Eidos's permanent `<NAMESPACE>-<NNNN>` (§5).
-5. **LLM-as-consumer is a real design goal, not an afterthought** — the
-   Plan should treat end users, LLM coding assistants, and LLM
-   user-task assistants as three consumers of one well-typed source, since
-   the semantic grounding of §17 was designed for machine consumption
-   already and generalizes cleanly.
+5. **LLM-as-consumer is a real design goal, not an afterthought.** A typed
+   corpus serves *three* consumers of one well-typed source: end users, LLM
+   coding assistants, and LLM user-task assistants. Designing for
+   derivation designs for all three simultaneously; designing for
+   independent authoring designs against LLM consumption by default. The
+   semantic grounding of §17 was already designed for machine consumption
+   (by Classic) and generalizes cleanly to LLM consumption. Prior art here
+   is thin; this is the frontier the Plan is positioned to articulate.
+
+**Derivation vs. independent authoring: when each wins.** Independent
+authoring is dominant across the industry — Microsoft, Apple, and most SaaS
+companies with dedicated writer teams treat user docs as an independent
+track. Partial derivation is nearly universal at the reference layer
+(rustdoc, Javadoc, Doxygen, OpenAPI generators); almost no serious project
+hand-writes an API reference. Full audience-projection derivation is
+uncommon — DITA-ditaval enterprise shops and Kubernetes-shaped KEP+writer
+workflows are the notable examples. Docs-as-code with light derivation
+(GitLab, Stripe) is the modern trend. LLM-shaped derivation is emerging and
+largely uncodified.
+
+*Derivation wins for:* small and medium teams without dedicated writers;
+rapidly-evolving APIs where drift risk is highest; teams using LLM
+assistance in development or documentation; projects where a single
+semantic graph across readerships is valuable (Classic's target case).
+
+*Independent authoring still wins for:* consumer products with heavy
+voice/UX requirements; regulated environments where user docs are audited
+artifacts; large writer organizations with independent editorial
+infrastructure; heavy-localization workflows where an intermediate
+normalized form is needed anyway.
+
+The honest bottom line: derivation from typed dev docs is undervalued today
+mainly because typed dev docs are themselves rare. Eidos changes the
+calculus — once dev docs are structured, derivation becomes cheap enough
+that independent authoring becomes hard to justify for the small-to-medium
+team case, especially under LLM-assisted development.
 
 These notes are context for the Plan, not the Plan itself. The concrete
 projection rules, curation refresh semantics, terminology mapping, and
