@@ -1180,10 +1180,94 @@ Plans, in priority order.
 |---|---|---|
 | O1 | Monolithic document granularity vs. modular authoring | Docs are whole files; no include mechanism; hard to reuse and hard to review in small diffs |
 | O2 | Bus factor / niche-tech adoption risk | Inherent to a bespoke standard bound to a Common Lisp platform; mitigable only by ecosystem uptake and honest disclosure |
-| O3 | End-user documentation as a first-class output | Seamed by §21 and tracked as S5, but not solved: user-doc derivation is a large body of work |
+| O3 | End-user documentation as a first-class output | Seamed by §21 and tracked as S5, but not solved: user-doc derivation is a large body of work. Prior-art notes to seed the Plan appear after this table. |
 | O4 | Reviewer capture from forge PR data | `reviewers` is currently hand-maintained; harvesting from GitHub/GitLab PR review data is a plausible extension, unspecified |
 | O5 | Multi-persona audience axis | `audience: developer \| end-user \| both` (§21) may need to become a small vocabulary (administrator, integrator, end-user) rather than three fixed values |
 | O6 | Draft-to-canonical ID assignment ergonomics | §13 specifies steward-at-merge; needs a tooling ergonomic that isn't friction at the moment of accept |
+
+### Prior-art notes for O3 (user-doc derivation)
+
+Non-normative context for the future `EIDOS-DRAFT-user-doc-derivation` Plan
+(§21, S5). The pattern of *developer-authored source → derived end-user
+output* has recurring prior art in five traditions; the Plan should draw
+from all of them rather than reinvent any.
+
+**Filtering from a structured source.** The most mature line. **DITA** with
+**ditaval** conditional filtering (`@audience`, `@product`, `@platform`) is
+the industry reference at enterprise scale (IBM, Oracle, Cisco). **Doxygen**
+`\internal` and Linux kernel-doc gate blocks by build. **Sphinx** `only::`
+directives with tagged builds are the mid-scale open-source equivalent (Read
+the Docs, OpenStack). **Antora**'s component/version/role model is the
+closest off-the-shelf tool to the §21 sketch. The recurring lesson: filtering
+belongs at *build* time driven by *declarative* metadata, never by branching
+source files.
+
+**Structured source with heavy transformation.** Cases where derivation is
+real but the writer-in-the-loop is explicit. **Kubernetes** — KEPs (roughly
+`Plan` + `Arch` in Eidos terms) plus auto-generated API reference feed
+writer-curated concept/task/tutorial pages under a formal Diátaxis split.
+**Rust** — `rustdoc` reference is generated; the *Book* and *Rust by Example*
+are hand-authored but rely on `rustdoc`-linkable ids for cross-references.
+**Django** — the project that motivated **Diátaxis** as an articulated
+framework (Procida works there); partial reference generation with
+hand-authored quadrants. **PostgreSQL** — one repository, developer-authored
+DocBook, tutorial/admin/reference living side by side with shared internal
+ids.
+
+**Literate programming and one-source-many-audiences.** Knuth's **WEB** and
+**CWEB** (compiled program plus typeset book from one source). **Docco** and
+its descendants (side-by-side prose-and-code). **Jupyter Book** and
+**org-mode Babel** (executable notebooks rendered to both reference and
+tutorial). Directly relevant in the Lisp lineage: **mgl-pax** — docstrings +
+narrative, cross-referenceable, in one image — architecturally the same
+"one source, multiple readerships" move Classic and Lexis assume.
+
+**Docs-as-code with explicit curation.** The framing closest to §21's
+"derivation plus curation." **GitLab**'s Handbook and product docs — engineering
+material curated by writers into user-facing pages, Markdown in Git
+throughout. **Stripe** — API reference generated from an internal spec;
+tutorials and guides hand-authored against a shared terminology dictionary
+and code-sample snippet library. **Divio**'s Diátaxis-in-practice writeups —
+not a system but a documented workflow of the same reshaping. The lesson
+across these: a shared terminology map is the single most load-bearing piece
+of infrastructure, and it must be first-class rather than an afterthought.
+
+**LLM-adjacent (emerging, thinly-formalized).** Documentation increasingly
+serves two audiences at once: human readers and LLM assistants consuming it
+as context. **Retrieval-augmented** docs from LangChain, Anthropic, and the
+OpenAI cookbook are authored with ingestion in mind; consistent structure,
+stable ids, cross-references, and typed metadata materially improve LLM
+behaviour — exactly what Eidos produces as a byproduct of §§5–9. Nascent
+conventions such as **`llms.txt`** surface LLM-friendly summaries. IDE-side
+tooling (**Cursor Rules**, **Continue.dev**) consumes project docs as
+context, with anecdotal evidence that well-structured corpora yield
+substantially better assistant behaviour. No rigorous account of
+"documentation as LLM context" has yet been published; the Plan is
+well-positioned to be one.
+
+**Cross-cutting patterns worth naming in the Plan.**
+
+1. **Metadata-driven filtering beats source branching** — DITA, Doxygen,
+   Sphinx, and Antora converged here independently.
+2. **A shared terminology map is load-bearing** — Stripe, Kubernetes, and
+   PostgreSQL all treat glossaries as first-class infrastructure; Eidos's
+   `Glossary` genre is positioned for this role.
+3. **Derivation seeds, writers finish** — every successful example
+   acknowledges the writer in the loop; the ones that attempted full
+   automation failed on register and voice.
+4. **Cross-reference stability is what enables multi-audience output** —
+   KEP ids, `rustdoc` anchors, Stripe operation ids all play the role of
+   Eidos's permanent `<NAMESPACE>-<NNNN>` (§5).
+5. **LLM-as-consumer is a real design goal, not an afterthought** — the
+   Plan should treat end users, LLM coding assistants, and LLM
+   user-task assistants as three consumers of one well-typed source, since
+   the semantic grounding of §17 was designed for machine consumption
+   already and generalizes cleanly.
+
+These notes are context for the Plan, not the Plan itself. The concrete
+projection rules, curation refresh semantics, terminology mapping, and
+product-namespace governance remain the subject of `EIDOS-DRAFT-user-doc-
+derivation` (§21).
 
 
 ---
