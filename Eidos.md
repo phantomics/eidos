@@ -578,16 +578,49 @@ participate in the identifier or federation system, and follows ecosystem
 convention — project identity, badges, install summary, quick example, and
 links to the corpus, `LICENSE`, and `CONTRIBUTING`.
 
-Wherever a README section covers material that also exists as a typed
-document under `doc/` — an installation `Guide`, a parameter `Ref`, a
-getting-started tutorial — the README SHOULD link to that document by `id`
-rather than duplicate its content. The typed document is the source of
-truth; the README is the curated entry point. Under this discipline the
-README stays short and its Guide-flavored or Ref-flavored sections cannot
-drift from the authoritative material in `doc/`.
+A README may be authored in either of two modes:
 
-Other repo-root fixtures (`LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`,
-`CHANGELOG.md`) are similarly outside the genre system.
+- **Direct-authored** — the README is a hand-written file at repo root.
+  Where its sections cover material that also exists as a typed document
+  under `doc/`, the README SHOULD link to that document by `id` rather than
+  duplicate its content.
+- **Compiled from a template** — for larger READMEs whose *marketing
+  surface* is load-bearing (a project's public-facing pitch, feature
+  showcase, in-depth quick start), the file at repo root is a compiled
+  output. A `README.md.eidos` template alongside it carries the
+  hand-authored material (identity, motivation, community links, badges)
+  interleaved with transclusion directives that pull named sections from
+  Eidos documents. The compiled `README.md` is committed so that GitHub
+  and similar forges render it without a build step; the §22 validator
+  checks that the committed file matches what the template would
+  currently produce.
+
+Transclusion directives use an HTML-comment form so they are invisible to
+plain Markdown renderers and unambiguously delimited:
+
+```markdown
+<!-- eidos:include APRIL-0007#getting-to-know-apl -->
+…content pulled from the named section of APRIL-0007…
+<!-- /eidos:include -->
+```
+
+The target is an Eidos `id` plus a Markdown section anchor; the pulled
+content lives once in its authoritative typed document and is composed into
+the README at build time. This is the closest Eidos comes to DITA-style
+transclusion, and it is bounded to fixture targets — it is not a general
+document-to-document include mechanism (§2).
+
+Compiled READMEs are the recommended pattern for projects whose README is a
+substantial, multi-genre document; small READMEs are better direct-authored.
+The same compilation mechanism MAY be applied to other repo-root fixtures
+such as `CONTRIBUTING.md` and `CHANGELOG.md` where duplication with typed
+docs would otherwise occur; `LICENSE` remains outside the genre and
+compilation systems entirely. Other repo-root fixtures such as `LICENSE` 
+that carry no doc-derived material remain simple fixtures with no 
+compilation involvement.
+
+The detailed specification of the transclusion directive, section-anchor
+grammar, and validation rules is tracked as a follow-on Plan (§23, S7).
 
 
 ## 11. Diagrams and Media
@@ -1162,6 +1195,7 @@ identifier in the `EIDOS` namespace.
 | S4 | Classic-native Tier-2 binding | §16; gated on Classic maturation |
 | S5 | User-doc derivation (audience projection, curation refresh, terminology mapping) | `EIDOS-DRAFT-user-doc-derivation` (§21) |
 | S6 | Genre-specific Lexis tags and Classic infobox/label lens registry | Follow-on Plan (§16) |
+| S7 | Fixture compilation / bounded transclusion (README, CONTRIBUTING, CHANGELOG) | `EIDOS-DRAFT-fixture-compilation` (§10) |
 
 ### Partially resolved
 
@@ -1197,7 +1231,7 @@ Plans, in priority order.
 
 | # | Area | Note |
 |---|---|---|
-| O1 | Monolithic document granularity vs. modular authoring | Docs are whole files; no include mechanism; hard to reuse and hard to review in small diffs |
+| O1 | Monolithic document granularity vs. modular authoring | Docs are whole files; no include mechanism for source documents; hard to reuse and hard to review in small diffs. Fixture compilation (S7) partially addresses this for derived fixtures like READMEs, but not for source-to-source transclusion, which remains a non-goal per §2. |
 | O2 | Bus factor / niche-tech adoption risk | Inherent to a bespoke standard bound to a Common Lisp platform; mitigable only by ecosystem uptake and honest disclosure |
 | O3 | End-user documentation as a first-class output | Seamed by §21 and tracked as S5, but not solved: user-doc derivation is a large body of work. Prior-art notes to seed the Plan appear after this table. |
 | O4 | Reviewer capture from forge PR data | `reviewers` is currently hand-maintained; harvesting from GitHub/GitLab PR review data is a plausible extension, unspecified |
