@@ -905,6 +905,15 @@ concrete tag and lens registry is deferred to a follow-on Plan.
   reference material fed from declt/mgl-pax.
 - **Backstage TechDocs** — docs-as-code aggregated into a catalogue of
   entities; front-matter maps to catalogue metadata. The enterprise story.
+- **Astro (and Astro-family static generators)** — component-oriented static
+  generation with typed content collections; a good fit for a *federated*
+  multi-project doc-and-marketing site drawing from many repositories at
+  once. Its Zod-typed content collections consume the same front-matter as
+  the RDF/JSON-LD binding, and its component model suits genre-specific
+  rendering and project landing pages. Distinct from Antora (component-
+  oriented vs. AsciiDoc-native); both remain valid. The full scope —
+  federation resolver, Astro-target Lexis renderer, content gating, and
+  README integration — is tracked as S8 (§23).
 - **Meilisearch / Typesense** — faceted full-text search indexed on genre,
   scope, status, component, project, author, and date.
 
@@ -1196,6 +1205,7 @@ identifier in the `EIDOS` namespace.
 | S5 | User-doc derivation (audience projection, curation refresh, terminology mapping) | `EIDOS-DRAFT-user-doc-derivation` (§21) |
 | S6 | Genre-specific Lexis tags and Classic infobox/label lens registry | Follow-on Plan (§16) |
 | S7 | Fixture compilation / bounded transclusion (README, CONTRIBUTING, CHANGELOG) | `EIDOS-DRAFT-fixture-compilation` (§10) |
+| S8 | Federated multi-project static site (Astro or equivalent): federation resolver, Astro-target renderer, content gating, README integration | `EIDOS-DRAFT-federated-site` (§16) |
 
 ### Partially resolved
 
