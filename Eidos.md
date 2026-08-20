@@ -1163,6 +1163,23 @@ share code with the Markdown→Lexis importer (§16).
 The concrete design and code belong in a separate effort; this appendix fixes
 only what the toolchain must guarantee and how it fits the pipeline.
 
+### Complementary authoring assistance
+
+Additional layers of assistance may complement the deterministic toolchain
+without replacing it. **Editor / language-server integration** provides live
+front-matter completion, id lookup, section-anchor selection, and template
+scaffolds during authoring. **LLM-assisted skills** (e.g. an OpenCode skill
+package) provide drafting help and judgment-level review — genre fit,
+section-shape adherence, decision-record quality, cross-reference
+plausibility — that deterministic checks structurally cannot make.
+
+Both layers **propose**; the §22 toolchain **disposes**. Neither is an
+authority for conformance: a document is conformant only when the toolchain
+says so, and human editorial review (§6) remains the approval gate. LLM
+assistance is subject to the standard's provenance discipline — a document
+authored or reviewed with LLM help carries `provenance:` in front-matter
+(§7). These layers are tracked as S9 (§23).
+
 
 ## 23. Appendix — Known Limitations and Outstanding Issues
 
@@ -1206,6 +1223,7 @@ identifier in the `EIDOS` namespace.
 | S6 | Genre-specific Lexis tags and Classic infobox/label lens registry | Follow-on Plan (§16) |
 | S7 | Fixture compilation / bounded transclusion (README, CONTRIBUTING, CHANGELOG) | `EIDOS-DRAFT-fixture-compilation` (§10) |
 | S8 | Federated multi-project static site (Astro or equivalent): federation resolver, Astro-target renderer, content gating, README integration | `EIDOS-DRAFT-federated-site` (§16) |
+| S9 | Authoring assistance layer: editor/language-server integration and LLM skills (OpenCode or equivalent — eidos-author, -review, -lookup, -derive) | `EIDOS-DRAFT-authoring-assistance` (§22) |
 
 ### Partially resolved
 
