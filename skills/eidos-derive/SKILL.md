@@ -1,13 +1,13 @@
 ---
-name: eidos-derive
-description: Invoke Eidos derivation pipelines with LLM curation where required — compile a project README from its template, produce a static-site build, or draft a Diátaxis-shaped end-user doc set from typed project docs. Use to generate derived artifacts from an Eidos corpus.
+name: compass-derive
+description: Invoke Compass derivation pipelines with LLM curation where required — compile a project README from its template, produce a static-site build, or draft a Diátaxis-shaped end-user doc set from typed project docs. Use to generate derived artifacts from an Compass corpus.
 ---
 
-# eidos-derive
+# compass-derive
 
-Stub. Derivation-driver skill for the Eidos documentation standard (the S9
-authoring-assistance layer; see `Eidos.md` §22 and §23 S9, tracked as
-`EIDOS-DRAFT-authoring-assistance`).
+Stub. Derivation-driver skill for the Compass documentation standard (the S9
+authoring-assistance layer; see `Compass.md` §22 and §23 S9, tracked as
+`COMPASS-DRAFT-authoring-assistance`).
 
 ## Intended behavior (to be built)
 

@@ -1,7 +1,7 @@
 # Genre templates
 
-Section-skeleton templates for each Eidos genre, per `../Eidos.md` §14. The
-`eidos-author` skill (`../skills/eidos-author/`) scaffolds new documents from
+Section-skeleton templates for each Compass genre, per `../Compass.md` §14. The
+`compass-author` skill (`../skills/compass-author/`) scaffolds new documents from
 these, and the fixture compiler (§10, S7) and site build (§16, S8) may draw
 on them for consistent structure.
 

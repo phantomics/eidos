@@ -1,13 +1,13 @@
 ---
-name: eidos-review
-description: Review an Eidos document or pull request for judgment-level conformance the deterministic toolchain cannot check — genre fit, section-shape adherence, decision-record quality, prior-art coverage, cross-reference plausibility, and README-transclusion drift. Use before accepting or merging an Eidos document.
+name: compass-review
+description: Review an Compass document or pull request for judgment-level conformance the deterministic toolchain cannot check — genre fit, section-shape adherence, decision-record quality, prior-art coverage, cross-reference plausibility, and README-transclusion drift. Use before accepting or merging an Compass document.
 ---
 
-# eidos-review
+# compass-review
 
-Stub. Judgment-level review skill for the Eidos documentation standard
-(the S9 authoring-assistance layer; see `Eidos.md` §22 and §23 S9, tracked
-as `EIDOS-DRAFT-authoring-assistance`).
+Stub. Judgment-level review skill for the Compass documentation standard
+(the S9 authoring-assistance layer; see `Compass.md` §22 and §23 S9, tracked
+as `COMPASS-DRAFT-authoring-assistance`).
 
 ## Intended behavior (to be built)
 

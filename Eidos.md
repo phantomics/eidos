@@ -1,8 +1,8 @@
-# Eidos
+# Compass
 
-**Extensible Interoperable Documentation-Ontology Standard**
+**Common Ontological Model for Prose Artifacts by Structural Standard**
 
-Eidos defines a small, rigorous vocabulary for the technical
+Compass defines a small, rigorous vocabulary for the technical
 documents that accompany a family of related software projects. It grew
 out of an ad-hoc set of filename prefixes (`DevLog`, `DevPlan`, `Concept`,
 `Eval`, and unprefixed reference docs) that had served a handful of Common
@@ -11,41 +11,41 @@ consistent across repositories. This document is that scheme made explicit,
 reconciled against established prior art, and generalized to span many
 projects at once.
 
-The name is deliberate. *Eidos* (Greek εἶδος, "form" or "type") names the
-standard's central idea — that a document has a *type* which determines its
-shape and meaning, the same principle of information typing on which the
-whole scheme rests. Read as an acronym it expands to **E**xtensible
-**I**nteroperable **D**ocumentation-**O**ntology **S**tandard, where the
-embedded `DOS` is itself *Documentation-Ontology Standard* and *Ontology*
-carries the semantic grounding.
+The name is deliberate. The *Compass* is a tool used to draw lines
+containing defined regions on a tracing board. The standard's central goal
+is to express the full range of documents to be produced in the course of
+a technology development project. Read as an acronym it expands to
+**C**ommon **O**ntological **M**odel for **P**rose **A**rtifacts by
+**S**tructural **S**tandard, where the embedded `COM` is itself
+*Common Ontological Model* and *Ontology* carries the semantic grounding.
 
 The standard is deliberately **lightweight**: documents are authored as
 Markdown with a YAML front-matter block, tracked in Git, and readable
 without tooling. At the same time it is designed so that a document is
 simultaneously a **semantic entity** — every metadata field maps onto a
-Common Lisp CLOS slot and an RDF predicate — so that a corpus of Eidos
+Common Lisp CLOS slot and an RDF predicate — so that a corpus of Compass
 documents can later be compiled into a wiki, a static site, a triplestore,
 or a native publishing platform without redesign.
 
 
 ## 1. Purpose and Lineage
 
-Eidos is a synthesis, not an invention. It draws each of its ideas
+Compass is a synthesis, not an invention. It draws each of its ideas
 from a mature source and keeps the pieces that fit:
 
 - **DITA** (Darwin Information Typing Architecture — IBM, later OASIS).
   The principle of *information typing*: a document has a *type* that
   determines its shape and purpose, and new types are derived by
   *specialization* from base types. DITA's base types — Concept, Task,
-  Reference — are the direct ancestors of several Eidos genres.
+  Reference — are the direct ancestors of several Compass genres.
 - **Diátaxis** (Procida). The four-way split of documentation into
   Explanation, Reference, Tutorial, and How-to. This informs the
   reference-side genres (`Ref`, `Guide`) and the exploratory `Survey`.
 - **ADR / MADR** (Architecture Decision Records; Nygard). The discipline
   of recording a single decision as Context / Decision / Alternatives /
-  Status. Eidos's decision registers (§8) are ADRs with stable IDs.
+  Status. Compass's decision registers (§8) are ADRs with stable IDs.
 - **IETF RFC and Python PEP.** Numbered documents with a controlled
-  status lifecycle and a master index. Eidos's numbering (§5) and
+  status lifecycle and a master index. Compass's numbering (§5) and
   controlled `status` vocabulary (§6) follow this tradition.
 - **ISO/IEC/IEEE 42010** (Architecture Description). The model of an
   architecture description as stakeholders, concerns, viewpoints, views,
@@ -62,7 +62,7 @@ document is placed both by *where it sits in a project's lifecycle*
 
 ## 2. Scope and Non-Goals
 
-Eidos is a standard for **project and engineering documentation** — the
+Compass is a standard for **project and engineering documentation** — the
 documents by which the developers of a federation of related software
 projects conceive, decide, build, verify, and reference their systems. Its
 center of gravity is the *development record*: exploration, evaluation,
@@ -74,44 +74,44 @@ so than by pretending to cover everything. The following are explicit
 non-goals. In each case the recommended approach is to use the established
 framework named and, where the two meet, to connect them through an
 integration seam (a `Ref` or `Guide` that links out to the external
-artifact) rather than to absorb the concern into Eidos.
+artifact) rather than to absorb the concern into Compass.
 
 - **End-user and product documentation** — installation guides, user
-  tutorials, help centers. Eidos's `Ref`/`Guide` serve *developer-facing*
+  tutorials, help centers. Compass's `Ref`/`Guide` serve *developer-facing*
   reference and walkthroughs, not polished end-user manuals. Cede this to
   **Diátaxis** and **DITA** — though §21 shows how an end-user set may be
   *derived* from project docs.
 - **Regulatory and compliance controlled-document regimes** — ISO 9001,
-  IEC 62304, DO-178C, FDA 21 CFR Part 11, SOC 2. Eidos is not a compliance
+  IEC 62304, DO-178C, FDA 21 CFR Part 11, SOC 2. Compass is not a compliance
   system of record and provides none of the signature, effective-date, or
   audit-trail machinery those regimes require.
 - **Localization and translation management** — as a *core* concern. An
-  Eidos document has a single authoritative source language; translation is
+  Compass document has a single authoritative source language; translation is
   handled as an opt-in extension (§19), not by the core.
 - **Single-sourcing and content reuse** — DITA-style `conref`/`keyref`
-  transclusion. Eidos documents are whole files with no include mechanism;
+  transclusion. Compass documents are whole files with no include mechanism;
   the audience projection of §21 provides a limited cross-audience reuse
   instead.
 - **Auto-generated API reference at scale** — OpenAPI/Swagger, Javadoc,
   Doxygen, and the HTML output of declt/mgl-pax. These are treated as
   *inputs or derived artifacts* that a `Ref` links to or is generated
-  alongside, not as documents Eidos manages.
+  alongside, not as documents Compass manages.
 - **Release notes and changelogs** — Keep a Changelog, semver release logs.
   These are per-release, append-oriented artifacts with their own
-  conventions; Eidos has no changelog genre.
+  conventions; Compass has no changelog genre.
 - **Runbooks, on-call, and incident postmortems** — operational/SRE formats
   with distinct lifecycles.
 - **Requirements specification and traceability matrices** — IEEE 29148 and
-  requirement-to-test traceability. Eidos's decision and open-question
+  requirement-to-test traceability. Compass's decision and open-question
   registers (§8) are not a requirements register.
 - **Knowledge-base, support, and FAQ content** — searchable help-center
   articles with their own categorization and feedback loops.
 - **Disposable scratch** — routine assistant transcripts, working notes, and
-  throwaway experiments. These are not Eidos documents; see the `Ideation`
+  throwaway experiments. These are not Compass documents; see the `Ideation`
   genre (§4) for the narrow exception of a curated, foundational discussion
   worth preserving.
 
-Finally, a note on honesty about value. In its **near term** Eidos delivers
+Finally, a note on honesty about value. In its **near term** Compass delivers
 *disciplined, federated, semantically-typed Markdown* — a real but modest
 benefit over ad-hoc prefixes. Its distinctive payoffs — wiki, triplestore,
 faceted search, semantic linking — are **aspirational**, gated on tooling
@@ -121,7 +121,7 @@ and should be evaluated as a roadmap, not a present capability.
 
 ## 3. The Two-Axis Model and Binding Independence
 
-Every Eidos document is classified along two independent axes:
+Every Compass document is classified along two independent axes:
 
 1. **Genre** — the document's purpose and maturity (§4).
 2. **Scope** — the document's altitude: `component`, `project`, or
@@ -134,7 +134,7 @@ of one bug fix and a program-spanning hardware architecture record.
 
 ### Binding independence
 
-Eidos defines a **binding-independent information model**. The
+Compass defines a **binding-independent information model**. The
 normative content of a document is its *information model*: its genre,
 scope, status, metadata fields, decision and open-question registers, body
 structure, and its typed relationships to other documents. That model can
@@ -187,7 +187,7 @@ The `Ideation` genre is deliberately narrow. It is for the *exceptional* seed
 discussion whose high-level framing is worth preserving as part of the record
 — a foundational design conversation that shaped a project's direction.
 Routine assistant transcripts, working notes, and throwaway experiments are
-disposable scratch and are **not** Eidos documents (§2); promoting one to
+disposable scratch and are **not** Compass documents (§2); promoting one to
 `Ideation` is a considered editorial act, not a default.
 
 ### The normativity grid
@@ -251,7 +251,7 @@ Every document carries a permanent identifier of the form:
 
 - **`<NAMESPACE>`** is the short name of the project or program that mints
   the document: `CLASSIC`, `ORIGIN`, `LEXTER`, `LEXIS` for projects,
-  `PSYCHE` for a program, `EIDOS` for this standard.
+  `PSYCHE` for a program, `COMPASS` for this standard.
 - **`<NNNN>`** is a zero-padded serial number, allocated once within the
   namespace and never reused (§13).
 
@@ -348,7 +348,7 @@ lossless.
 
 ```yaml
 ---
-id:            PSYCHE-0001            # → classic:uri; the permanent identifier (§5)
+id:            PSYCHE-0001             # → classic:uri; the permanent identifier (§5)
 title:         The Psyche Architecture # → rdfs:label / dc:title
 genre:         Architecture            # → classic:type / rdf:type (§4)
 subtype:       ~                       # Eval: prior-art|comparison|tradeoff; Guide: tutorial|howto
@@ -399,7 +399,7 @@ history, per the rules below.
 
 Author and date metadata duplicate what Git already knows. Rather than
 hand-maintain (and let drift) values that `git log` supplies authoritatively,
-Eidos permits three fields to be **derived from Git history**:
+Compass permits three fields to be **derived from Git history**:
 
 - **`authors`** — from `git log --follow` over the file's history.
 - **`created`** — the first commit that added the file.
@@ -468,7 +468,7 @@ a `project`-scope open question by ID.
 
 The corpus has, historically, used incompatible cross-reference cultures:
 Markdown links (Origin), prose backtick mentions (Classic), and bare
-`file:line` code anchoring (Lexter). Eidos unifies them.
+`file:line` code anchoring (Lexter). Compass unifies them.
 
 ### Document-to-document references
 
@@ -550,8 +550,8 @@ A program of related projects is documented across three tiers of
 repository:
 
 ```
-eidos/                        # this standard + templates + master INDEX
-  Eidos.md
+compass/                      # this standard + templates + master INDEX
+  Compass.md
   templates/
   INDEX.md                    # federated aggregate of all repos
 
@@ -567,12 +567,12 @@ eidos/                        # this standard + templates + master INDEX
 ```
 
 Each repository keeps a local registry / index of its allocated identifiers
-(§13); the `eidos/INDEX.md` federates these into one catalogue — the analogue
+(§13); the `compass/INDEX.md` federates these into one catalogue — the analogue
 of a PEP-0 index, a DITA map, and a Classic federation space.
 
 ### The repository README
 
-Each repository's `README.md` is a **fixture**, not an Eidos document: it
+Each repository's `README.md` is a **fixture**, not an Compass document: it
 lives at repo root (not `doc/`), carries no front-matter, does not
 participate in the identifier or federation system, and follows ecosystem
 convention — project identity, badges, install summary, quick example, and
@@ -587,10 +587,10 @@ A README may be authored in either of two modes:
 - **Compiled from a template** — for larger READMEs whose *marketing
   surface* is load-bearing (a project's public-facing pitch, feature
   showcase, in-depth quick start), the file at repo root is a compiled
-  output. A `README.md.eidos` template alongside it carries the
+  output. A `README.md.compass` template alongside it carries the
   hand-authored material (identity, motivation, community links, badges)
   interleaved with transclusion directives that pull named sections from
-  Eidos documents. The compiled `README.md` is committed so that GitHub
+  Compass documents. The compiled `README.md` is committed so that GitHub
   and similar forges render it without a build step; the §22 validator
   checks that the committed file matches what the template would
   currently produce.
@@ -599,14 +599,14 @@ Transclusion directives use an HTML-comment form so they are invisible to
 plain Markdown renderers and unambiguously delimited:
 
 ```markdown
-<!-- eidos:include APRIL-0007#getting-to-know-apl -->
+<!-- compass:include APRIL-0007#getting-to-know-apl -->
 …content pulled from the named section of APRIL-0007…
-<!-- /eidos:include -->
+<!-- /compass:include -->
 ```
 
-The target is an Eidos `id` plus a Markdown section anchor; the pulled
+The target is an Compass `id` plus a Markdown section anchor; the pulled
 content lives once in its authoritative typed document and is composed into
-the README at build time. This is the closest Eidos comes to DITA-style
+the README at build time. This is the closest Compass comes to DITA-style
 transclusion, and it is bounded to fixture targets — it is not a general
 document-to-document include mechanism (§2).
 
@@ -655,7 +655,7 @@ described as a forward-looking extension in §20. This section states the
 author-time rules. They map onto existing Lexis node slots and are checked by
 the validation toolchain (§22).
 
-An Eidos document MUST:
+An Compass document MUST:
 
 - provide **alt text** for every image;
 - provide a **text-equivalent long description** for every diagram (§11);
@@ -679,18 +679,18 @@ collision. Both are defined here.
 
 ### Stewardship
 
-Eidos is itself an Eidos document — `program`-scope, identifier `EIDOS-0001`
+Compass is itself an Compass document — `program`-scope, identifier `COMPASS-0001`
 — and is maintained under the same discipline it imposes. A named **steward**
-owns each namespace: the steward of the `EIDOS` namespace owns this standard
+owns each namespace: the steward of the `COMPASS` namespace owns this standard
 and its controlled vocabularies (the genre set of §4, the status vocabulary
 of §6); the steward of a project or program namespace (e.g. `ORIGIN`,
 `PSYCHE`) owns that corpus's index and identifier allocation.
 
 ### Changing the standard
 
-Eidos carries a semantic version and a changelog expressed as decision
-records (§8) in the `EIDOS` namespace. A change is proposed as a `Plan` (or,
-for a single narrow decision, a `D`-record) against `EIDOS`, reviewed under
+Compass carries a semantic version and a changelog expressed as decision
+records (§8) in the `COMPASS` namespace. A change is proposed as a `Plan` (or,
+for a single narrow decision, a `D`-record) against `COMPASS`, reviewed under
 §6, and on acceptance the version is incremented:
 
 - **patch** — clarifications and editorial fixes (including filling a stub
@@ -730,7 +730,7 @@ cross-reference ever dangles.
 
 ### The master index
 
-The `EIDOS` steward maintains `eidos/INDEX.md`, which federates the
+The `COMPASS` steward maintains `compass/INDEX.md`, which federates the
 per-namespace registries into one catalogue (§10). It is generated from
 front-matter and the registries, never hand-maintained as a parallel source.
 
@@ -854,7 +854,7 @@ is the rationale companion to the rules in §§4–14.
 
 ## 16. Appendix — Derivation and Rendering Targets
 
-An Eidos corpus is a **source of truth** from which every other form is
+An Compass corpus is a **source of truth** from which every other form is
 **derived one-way**. The reference binding keeps that source in Git as
 Markdown+YAML; all rendered forms are compiled from it and never edited
 directly.
@@ -862,7 +862,7 @@ directly.
 ### The pipeline
 
 ```
-Eidos .md + YAML                  (Git = source of truth)
+Compass .md + YAML                  (Git = source of truth)
         │  Markdown→Lexis importer
         ▼
 Lexis IR (body tree)  +  Classic metadata / RDF   (front-matter → :classic:*)
@@ -898,7 +898,7 @@ concrete tag and lens registry is deferred to a follow-on Plan.
   endpoints; the wiki resolves cross-references and renders genre infoboxes
   via lenses, with revision history mapped from Git commits.
 - **Antora** — native multi-repository aggregation; its component/version
-  model maps directly onto Eidos `scope`/`project`. Best fit for the
+  model maps directly onto Compass `scope`/`project`. Best fit for the
   federated corpus.
 - **Sphinx + MyST** — `intersphinx` gives cross-project referenceable
   objects that mirror the federated `id` graph; strong for Common Lisp
@@ -966,10 +966,10 @@ cross-reference graph (§9) survives promotion and export intact.
 ## 17. Appendix — Classic-as-Platform Mapping
 
 For implementers targeting Classic (as a render target in Tier 1 or as the
-store in Tier 2), the Eidos information model maps onto Classic's
+store in Tier 2), the Compass information model maps onto Classic's
 semantic model as follows. This table doubles as the ingestion specification.
 
-| Eidos concept | Classic mapping |
+| Compass concept | Classic mapping |
 |---|---|
 | `genre` | `classic:type` / `rdf:type` (a `doc-<genre>` subclass of `wiki-page`) |
 | `scope` | Federation altitude / enclosing `sioc:Space` |
@@ -994,7 +994,7 @@ they are the *derivation* target that the pipeline (§16) produces.
 
 *Non-normative; forward-looking.*
 
-The core of Eidos is deliberately small. Capabilities beyond it attach as
+The core of Compass is deliberately small. Capabilities beyond it attach as
 **extensions**, so the core need not grow to accommodate every concern. An
 extension is defined by the same principle that governs the whole standard:
 add without disturbing what is already there.
@@ -1022,7 +1022,7 @@ The following appendices define three extensions in this shape.
 
 *Non-normative; forward-looking.*
 
-Localization is modelled the way everything else in Eidos is: one
+Localization is modelled the way everything else in Compass is: one
 authoritative source, everything else derived one-way.
 
 - **Source language.** Each document declares an authoritative `language`
@@ -1073,7 +1073,7 @@ Prior art: WCAG 2.x, WAI-ARIA, EPUB Accessibility.
 
 *Non-normative; forward-looking.*
 
-End-user documentation is not a genre in Eidos; it is a **derivation** of the
+End-user documentation is not a genre in Compass; it is a **derivation** of the
 project docs, produced by projecting audience-appropriate content and
 re-shaping it into the Diátaxis quadrants.
 
@@ -1087,16 +1087,16 @@ re-shaping it into the Diátaxis quadrants.
   end-user set; it does not finish it. End-user docs need framing, tone, and
   screenshots that development docs lack, so a technical writer curates and
   augments the projected material. This is cross-audience *reuse*, not full
-  automation, and it is the closest Eidos comes to single-sourcing (§2).
+  automation, and it is the closest Compass comes to single-sourcing (§2).
 - **One-way.** The project docs remain the source of truth; the end-user set
-  is a derived corpus (itself potentially an Eidos corpus in a product
+  is a derived corpus (itself potentially an Compass corpus in a product
   namespace, or an external Diátaxis/DITA site).
 
 Prior art: DITA `@audience` conditional processing (ditaval); Diátaxis.
 
 Full scope-out of the projection rules, curation refresh semantics,
 terminology mapping, product-namespace governance, and product-release
-versioning is tracked as the follow-on Plan `EIDOS-DRAFT-user-doc-derivation`.
+versioning is tracked as the follow-on Plan `COMPASS-DRAFT-user-doc-derivation`.
 This appendix remains a sketch; the Plan will carry the detail and is
 recorded in §23 as one of the standard's specified-but-deferred items.
 
@@ -1104,7 +1104,7 @@ recorded in §23 as one of the standard's specified-but-deferred items.
 ## 22. Appendix — Conformance and the Validation Toolchain
 
 *Non-normative; describes intended tooling, not yet built. Tracked as the
-`EIDOS-DRAFT-toolchain` Plan.*
+`COMPASS-DRAFT-toolchain` Plan.*
 
 Until this toolchain exists, conformance is upheld by convention and
 editorial review (§6, §13); an unenforced standard drifts, so the toolchain
@@ -1156,7 +1156,7 @@ share code with the Markdown→Lexis importer (§16).
 - The checks above run over the parsed front-matter and body tree, emitting a
   report (human-readable and machine-readable) with per-finding severity.
 - As a side output the tool can regenerate each namespace's registry and the
-  federated `eidos/INDEX.md` (§13, §10) from front-matter, keeping the index
+  federated `compass/INDEX.md` (§13, §10) from front-matter, keeping the index
   from being a hand-maintained parallel source.
 - It runs locally and in CI (on pull request), gating merges on errors.
 
@@ -1187,8 +1187,8 @@ authored or reviewed with LLM help carries `provenance:` in front-matter
 is being addressed. Entries are never deleted; they migrate between
 categories as amendments (§13) land, so the history of what changed and why
 is legible without excavating the change log. This appendix is prospective
-(what Eidos itself still lacks); it complements §15, which is retrospective
-(what the ad-hoc corpora did and how Eidos fixes them).*
+(what Compass itself still lacks); it complements §15, which is retrospective
+(what the ad-hoc corpora did and how Compass fixes them).*
 
 ### Resolved
 
@@ -1211,19 +1211,47 @@ Closed items, retained as history.
 ### Specified, tooling deferred
 
 Described in the standard but not yet built. Each has a tracking Plan
-identifier in the `EIDOS` namespace.
+identifier in the `COMPASS` namespace.
 
 | # | Area | Tracked as |
 |---|---|---|
-| S1 | Validation toolchain (Common Lisp; front-end shared with the importer) | `EIDOS-DRAFT-toolchain` (§22) |
-| S2 | Markdown→Lexis importer | Part of `EIDOS-DRAFT-toolchain` (§16) |
+| S1 | Validation toolchain (Common Lisp; front-end shared with the importer) | `COMPASS-DRAFT-toolchain` (§22) |
+| S2 | Markdown→Lexis importer | Part of `COMPASS-DRAFT-toolchain` (§16) |
 | S3 | Diagrams and media detailed conventions | §11 stub, to be filled by amendment |
 | S4 | Classic-native Tier-2 binding | §16; gated on Classic maturation |
-| S5 | User-doc derivation (audience projection, curation refresh, terminology mapping) | `EIDOS-DRAFT-user-doc-derivation` (§21) |
+| S5 | User-doc derivation (audience projection, curation refresh, terminology mapping) | `COMPASS-DRAFT-user-doc-derivation` (§21) |
 | S6 | Genre-specific Lexis tags and Classic infobox/label lens registry | Follow-on Plan (§16) |
-| S7 | Fixture compilation / bounded transclusion (README, CONTRIBUTING, CHANGELOG) | `EIDOS-DRAFT-fixture-compilation` (§10) |
-| S8 | Federated multi-project static site (Astro or equivalent): federation resolver, Astro-target renderer, content gating, README integration | `EIDOS-DRAFT-federated-site` (§16) |
-| S9 | Authoring assistance layer: editor/language-server integration and LLM skills (OpenCode or equivalent — eidos-author, -review, -lookup, -derive) | `EIDOS-DRAFT-authoring-assistance` (§22) |
+| S7 | Fixture compilation / bounded transclusion (README, CONTRIBUTING, CHANGELOG) | `COMPASS-DRAFT-fixture-compilation` (§10) |
+| S8 | Federated multi-project static site (Astro or equivalent): federation resolver, Astro-target renderer, content gating, README integration | `COMPASS-DRAFT-federated-site` (§16) |
+| S9 | Authoring assistance layer: editor/language-server integration and LLM skills across harnesses (compass-author, -review, -lookup, -derive), with a harness-neutral core and per-harness adapters | `COMPASS-DRAFT-authoring-assistance` (§22) |
+
+**Note on S9 — harness portability.** The four skills separate cleanly into
+a **harness-neutral core** (each skill's behaviour, invariants, and
+dependencies — the substance already stubbed in `skills/*/SKILL.md`) and a
+**harness-specific envelope** (the front-matter schema, file layout, and
+discovery mechanism a given agent harness expects). Only the envelope changes
+between harnesses, so the plan is to author the core once and adapt outward:
+
+- **OpenCode** — the primary/reference implementation; `skills/*/SKILL.md`
+  with OpenCode skill front-matter (already scaffolded).
+- **Claude Code** — near-mechanical port: subagents (`.claude/agents/*.md`)
+  for the agent-shaped skills (`compass-author`, `compass-review`) and slash
+  commands (`.claude/commands/*.md`) for the command-shaped ones
+  (`compass-lookup`), differing from OpenCode only in front-matter keys and
+  directory location.
+- **Cursor / Copilot** — the prompt-shaped harnesses: an Compass ruleset
+  (`.cursor/rules/*.mdc`) or instructions file injects the standard's
+  conventions as context; the callable-helper behaviours are reshaped to
+  each harness's model.
+- **MCP (Model Context Protocol)** — the portable layer for the *tool-shaped*
+  skills (`compass-lookup`, `compass-derive`), exposed as an MCP server so any
+  MCP-compatible host consumes them uniformly; the *prompt-shaped* skills
+  (`compass-author`, `compass-review`) stay harness-specific.
+
+The Plan owns the neutral core plus adapters (or generators) per target;
+adaptation cost is low for Claude Code, moderate for Cursor/Copilot and for
+the MCP tool server. The "propose vs. dispose" invariant (§22) holds across
+all harnesses: each envelope calls the same §22 toolchain for conformance.
 
 ### Partially resolved
 
@@ -1268,7 +1296,7 @@ Plans, in priority order.
 
 ### Prior-art notes for O3 (user-doc derivation)
 
-Non-normative context for the future `EIDOS-DRAFT-user-doc-derivation` Plan
+Non-normative context for the future `COMPASS-DRAFT-user-doc-derivation` Plan
 (§21, S5). The pattern of *developer-authored source → derived end-user
 output* has recurring prior art in five traditions; the Plan should draw
 from all of them rather than reinvent any.
@@ -1285,7 +1313,7 @@ source files.
 
 **Structured source with heavy transformation.** Cases where derivation is
 real but the writer-in-the-loop is explicit. **Kubernetes** — KEPs (roughly
-`Plan` + `Arch` in Eidos terms) plus auto-generated API reference feed
+`Plan` + `Arch` in Compass terms) plus auto-generated API reference feed
 writer-curated concept/task/tutorial pages under a formal Diátaxis split.
 **Rust** — `rustdoc` reference is generated; the *Book* and *Rust by Example*
 are hand-authored but rely on `rustdoc`-linkable ids for cross-references.
@@ -1318,7 +1346,7 @@ serves two audiences at once: human readers and LLM assistants consuming it
 as context. **Retrieval-augmented** docs from LangChain, Anthropic, and the
 OpenAI cookbook are authored with ingestion in mind; consistent structure,
 stable ids, cross-references, and typed metadata materially improve LLM
-behaviour — exactly what Eidos produces as a byproduct of §§5–9. Nascent
+behaviour — exactly what Compass produces as a byproduct of §§5–9. Nascent
 conventions such as **`llms.txt`** surface LLM-friendly summaries. IDE-side
 tooling (**Cursor Rules**, **Continue.dev**) consumes project docs as
 context, with anecdotal evidence that well-structured corpora yield
@@ -1331,14 +1359,14 @@ well-positioned to be one.
 1. **Metadata-driven filtering beats source branching** — DITA, Doxygen,
    Sphinx, and Antora converged here independently.
 2. **A shared terminology map is load-bearing** — Stripe, Kubernetes, and
-   PostgreSQL all treat glossaries as first-class infrastructure; Eidos's
+   PostgreSQL all treat glossaries as first-class infrastructure; Compass's
    `Glossary` genre is positioned for this role.
 3. **Derivation seeds, writers finish** — every successful example
    acknowledges the writer in the loop; the ones that attempted full
    automation failed on register and voice.
 4. **Cross-reference stability is what enables multi-audience output** —
    KEP ids, `rustdoc` anchors, Stripe operation ids all play the role of
-   Eidos's permanent `<NAMESPACE>-<NNNN>` (§5).
+   Compass's permanent `<NAMESPACE>-<NNNN>` (§5).
 5. **LLM-as-consumer is a real design goal, not an afterthought.** A typed
    corpus serves *three* consumers of one well-typed source: end users, LLM
    coding assistants, and LLM user-task assistants. Designing for
@@ -1371,20 +1399,20 @@ infrastructure; heavy-localization workflows where an intermediate
 normalized form is needed anyway.
 
 The honest bottom line: derivation from typed dev docs is undervalued today
-mainly because typed dev docs are themselves rare. Eidos changes the
+mainly because typed dev docs are themselves rare. Compass changes the
 calculus — once dev docs are structured, derivation becomes cheap enough
 that independent authoring becomes hard to justify for the small-to-medium
 team case, especially under LLM-assisted development.
 
 These notes are context for the Plan, not the Plan itself. The concrete
 projection rules, curation refresh semantics, terminology mapping, and
-product-namespace governance remain the subject of `EIDOS-DRAFT-user-doc-
+product-namespace governance remain the subject of `COMPASS-DRAFT-user-doc-
 derivation` (§21).
 
 
 ---
 
-*Eidos is itself a `program`-scope document and should carry front-matter
-and the identifier `EIDOS-0001` once the standard is adopted; it is
+*Compass is itself a `program`-scope document and should carry front-matter
+and the identifier `COMPASS-0001` once the standard is adopted; it is
 presented here without front-matter as the defining instance of the scheme
 it describes.*

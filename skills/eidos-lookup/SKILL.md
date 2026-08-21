@@ -1,13 +1,13 @@
 ---
-name: eidos-lookup
-description: Resolve identifiers, decisions, open questions, and cross-references across a federated Eidos corpus. Use to answer "show me PSYCHE-D16", "what cites CLASSIC-0003?", "list ORIGIN open questions", or "give me the current LEXTER index" during authoring or review.
+name: compass-lookup
+description: Resolve identifiers, decisions, open questions, and cross-references across a federated Compass corpus. Use to answer "show me PSYCHE-D16", "what cites CLASSIC-0003?", "list ORIGIN open questions", or "give me the current LEXTER index" during authoring or review.
 ---
 
-# eidos-lookup
+# compass-lookup
 
-Stub. Corpus-aware retrieval skill for the Eidos documentation standard
-(the S9 authoring-assistance layer; see `Eidos.md` §22 and §23 S9, tracked
-as `EIDOS-DRAFT-authoring-assistance`).
+Stub. Corpus-aware retrieval skill for the Compass documentation standard
+(the S9 authoring-assistance layer; see `Compass.md` §22 and §23 S9, tracked
+as `COMPASS-DRAFT-authoring-assistance`).
 
 ## Intended behavior (to be built)
 
